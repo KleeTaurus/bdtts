@@ -3,6 +3,7 @@ import os
 import json
 import datetime
 import re
+import wave
 
 from urllib.request import urlopen
 from urllib.request import Request
@@ -86,7 +87,7 @@ def fetch_token():
 """  TOKEN end """
 
 
-def output_file():
+def new_file():
     current_datetime = datetime.datetime.now()
     return current_datetime.strftime("%Y-%m-%d_%H-%M-%S") + "." + FORMAT
 
@@ -128,7 +129,8 @@ def text_to_audio(text):
         result_str = err.read()
         has_error = True
 
-    save_file = "error.txt" if has_error else output_file()
+    out_file = new_file()
+    save_file = "error.txt" if has_error else out_file
     with open(save_file, "wb") as of:
         of.write(result_str)
 
@@ -137,6 +139,8 @@ def text_to_audio(text):
         print("tts api error:" + result_str)
 
     print("result saved as :" + save_file)
+
+    return out_file
 
 
 def read_text(input):
@@ -170,9 +174,31 @@ def split_text(text):
 
     return segmented_text
 
+def merge_audio(aud_files, merged_aud_file):
+    data = []
+    for file in aud_files:
+        w = wave.open(file, 'rb')
+        data.append([w.getparams(), w.readframes(w.getnframes())])
+        w.close()
+        
+    output = wave.open(merged_aud_file, 'wb')
+    output.setparams(data[0][0])
+    for i in range(len(data)):
+        output.writeframes(data[i][1])
+    output.close()
+
 
 if __name__ == "__main__":
     segments = split_text(read_text("input.txt"))
+
+    # 输出 audio 文件集合
+    aud_files = []
     for seg_text in segments:
         # print(seg_text)
-        text_to_audio(seg_text)
+        aud_file = text_to_audio(seg_text)
+        aud_files.append(aud_file)
+
+    merged_aud_file = new_file()
+    merge_audio(aud_files, merged_aud_file)
+
+    print("audio file: " + merged_aud_file)
