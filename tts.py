@@ -69,7 +69,7 @@ def fetch_token():
 
     # print(result_str)
     result = json.loads(result_str)
-    print(result)
+    print("result: ", result)
     if "access_token" in result.keys() and "scope" in result.keys():
         if not SCOPE in result["scope"].split(" "):
             raise TTSError("scope is not correct")
@@ -110,6 +110,7 @@ def text_to_audio(text):
     }  # lan ctp 固定参数
 
     data = urlencode(params)
+    print(data)
     # print("test on Web Browser" + TTS_URL + "?" + data)
 
     req = Request(TTS_URL, data.encode("utf-8"))
