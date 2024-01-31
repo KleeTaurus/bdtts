@@ -49,7 +49,7 @@ SCOPE = "audio_tts_post"  # 有此scope表示有tts能力，没有请在网页�
 
 
 def fetch_token():
-    print("fetch token begin")
+    # print("fetch token begin")
     params = {
         "grant_type": "client_credentials",
         "client_id": API_KEY,
@@ -69,7 +69,7 @@ def fetch_token():
 
     # print(result_str)
     result = json.loads(result_str)
-    print("result: ", result)
+    # print("result: ", result)
     if "access_token" in result.keys() and "scope" in result.keys():
         if not SCOPE in result["scope"].split(" "):
             raise TTSError("scope is not correct")
@@ -110,7 +110,7 @@ def text_to_audio(text):
     }  # lan ctp 固定参数
 
     data = urlencode(params)
-    print(data)
+    # print(data)
     # print("test on Web Browser" + TTS_URL + "?" + data)
 
     req = Request(TTS_URL, data.encode("utf-8"))
@@ -181,7 +181,7 @@ def merge_audio(aud_files, merged_aud_file):
         w = wave.open(file, 'rb')
         data.append([w.getparams(), w.readframes(w.getnframes())])
         w.close()
-        
+
     output = wave.open(merged_aud_file, 'wb')
     output.setparams(data[0][0])
     for i in range(len(data)):
