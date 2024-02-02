@@ -12,6 +12,7 @@ from urllib.parse import urlencode
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
+from pydub import AudioSegment
 
 load_dotenv(verbose=True)
 
@@ -89,7 +90,7 @@ def fetch_token():
 
 def new_file():
     current_datetime = datetime.datetime.now()
-    return current_datetime.strftime("%Y-%m-%d_%H-%M-%S") + "." + FORMAT
+    return current_datetime.strftime("%Y-%m-%d_%H-%M-%S.%f") + "." + FORMAT
 
 
 def text_to_audio(text):
@@ -188,6 +189,12 @@ def merge_audio(aud_files, merged_aud_file):
         output.writeframes(data[i][1])
     output.close()
 
+def wav2mp3(wav_file):
+    audio = AudioSegment.from_wav(wav_file)
+    mp3_file = wav_file.replace(".wav", ".mp3")
+    audio.export(mp3_file, format="mp3", bitrate="190k")
+    return mp3_file
+
 
 if __name__ == "__main__":
     segments = split_text(read_text("input.txt"))
@@ -201,5 +208,6 @@ if __name__ == "__main__":
 
     merged_aud_file = new_file()
     merge_audio(aud_files, merged_aud_file)
+    mp3_file = wav2mp3(merged_aud_file)
 
-    print("audio file: " + merged_aud_file)
+    print("audio file: " + mp3_file)
