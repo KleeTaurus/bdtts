@@ -3,18 +3,18 @@ Baidu TTS for IP Subscription Project
 
 # Installation
 
-setup virtualenv and activate it
+1. setup virtualenv and activate it
 ```
 python -m venv venv
 source venv/bin/activate
 ```
 
-install python-dotenv
+2. install python-dotenv
 ```
 pip install python-dotenv
 ```
 
-create .env file and set API_KEY and SECRET_KEY
+3. create .env file and set API_KEY and SECRET_KEY
 ```
 touch .env
 vi .env
@@ -23,6 +23,12 @@ vi .env
 API_KEY=<YOUR_API_KEY>
 SECRET_KEY=<YOUR_SECRET_KEY>
 
+4. download ffmpeg binary file into current directory
+```
+wget https://evermeet.cx/ffmpeg/ffmpeg-113507-gf6b7b473d4.zip
+unzip ffmpeg-113507-gf6b7b473d4.zip
+```
+
 # Usage
 
 copy your text into input.txt
@@ -30,5 +36,5 @@ copy your text into input.txt
 convert text into audio(wav)
 
 ```
-python tts.py
+./run.sh
 ```
